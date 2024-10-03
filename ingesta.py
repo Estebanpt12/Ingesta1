@@ -32,16 +32,15 @@ def validar_datos(df, nombre_archivo):
             errores_encontrados = True
             continue  # Si hay nulos, no procede a las siguientes validaciones de esa fila
 
-        # Validar que las columnas requeridas están presentes en la fila antes de validarlas
+        # Validar que el código del estudiante sea numérico
         if 'Código del estudiante' in df.columns:
-            # Validar que el código del estudiante sea numérico
             if not str(row['Código del estudiante']).isdigit():
                 error_msg = f"Error en {nombre_archivo}, fila {index+1}: Código del estudiante no es numérico"
                 registrar_error(error_msg)
                 errores_encontrados = True
 
+        # Validar que la nota sea un float
         if 'Nota' in df.columns:
-            # Validar que la nota sea un float
             try:
                 nota = float(row['Nota'])
                 if nota < 0 or nota > 5:  # Rango típico de calificaciones
@@ -53,10 +52,29 @@ def validar_datos(df, nombre_archivo):
                 registrar_error(error_msg)
                 errores_encontrados = True
 
+        # Validar que el periodo académico siga el formato YYYY-N (N puede ser 1 o 2)
         if 'Periodo académico' in df.columns:
-            # Validar que el periodo académico siga el formato YYYY-N (N puede ser 1 o 2)
             if not re.match(r'^\d{4}-[12]$', str(row['Periodo académico'])):
                 error_msg = f"Error en {nombre_archivo}, fila {index+1}: Formato de periodo académico inválido (Debe ser YYYY-1 o YYYY-2)"
+                registrar_error(error_msg)
+                errores_encontrados = True
+
+        # Validar que los campos de texto no tengan caracteres raros
+        if 'Nombre del estudiante' in df.columns:
+            if not re.match(r"^[A-Za-zÁÉÍÓÚáéíóúñÑ' ]+$", str(row['Nombre del estudiante'])):
+                error_msg = f"Error en {nombre_archivo}, fila {index+1}: El nombre contiene caracteres inválidos"
+                registrar_error(error_msg)
+                errores_encontrados = True
+
+        if 'Materia' in df.columns:
+            if not re.match(r"^[A-Za-z0-9ÁÉÍÓÚáéíóúñÑ' ]+$", str(row['Materia'])):
+                error_msg = f"Error en {nombre_archivo}, fila {index+1}: La materia contiene caracteres inválidos"
+                registrar_error(error_msg)
+                errores_encontrados = True
+
+        if 'Programa académico' in df.columns:
+            if not re.match(r"^[A-Za-zÁÉÍÓÚáéíóúñÑ' ]+$", str(row['Programa académico'])):
+                error_msg = f"Error en {nombre_archivo}, fila {index+1}: El programa académico contiene caracteres inválidos"
                 registrar_error(error_msg)
                 errores_encontrados = True
 
