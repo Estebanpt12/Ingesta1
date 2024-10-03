@@ -1,0 +1,12 @@
+[2024-10-03 14:59:09] Error en notas_ing_sistemas.csv: Columna faltante: Periodo académico
+[2024-10-03 14:59:09] Error en notas_ing_sistemas.csv, fila 1: Hay valores nulos en la fila
+[2024-10-03 14:59:09] Error en notas_ing_sistemas.csv, fila 2: La nota no es un número válido
+[2024-10-03 15:00:42] Error en notas_ing_sistemas.csv: Columna faltante: Periodo académico
+[2024-10-03 15:00:42] Error en notas_ing_sistemas.csv, fila 1: Hay valores nulos en la fila
+[2024-10-03 15:00:42] Error en notas_ing_sistemas.csv, fila 2: La nota no es un número válido
+[2024-10-03 15:00:47] Error en notas_ing_sistemas.csv: Columna faltante: Periodo académico
+[2024-10-03 15:00:47] Error en notas_ing_sistemas.csv, fila 1: Hay valores nulos en la fila
+[2024-10-03 15:00:47] Error en notas_ing_sistemas.csv, fila 2: La nota no es un número válido
+[2024-10-03 15:02:00] Error en notas_ing_sistemas.csv: Columna faltante: Periodo académico
+[2024-10-03 15:02:00] Error en notas_ing_sistemas.csv, fila 1: Hay valores nulos en la fila
+[2024-10-03 15:02:00] Error en notas_ing_sistemas.csv, fila 2: La nota no es un número válido
