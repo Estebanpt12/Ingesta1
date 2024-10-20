@@ -1,1 +1,13 @@
 __pycache__
+*.libs
+*.dist-info
+bin
+boto3
+botocore
+dateutil
+jmespath
+pandas
+pytz
+s3transfer
+tzdata
+urllib3
