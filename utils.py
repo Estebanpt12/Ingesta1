@@ -12,7 +12,7 @@ def obtener_facultad_programa(nombre_archivo):
         if facultad in nombre_archivo:
             # Capturar el programa completo, incluyendo el nombre de la facultad
             programa = nombre_archivo.split(facultad + '_', 1)[1].rsplit('.csv', 1)[0]
-            if programa == 'ingenieria':
+            if facultad == 'ingenieria':
                 programa = facultad + '_' + programa
             return facultad, programa
     return 'desconocido', 'desconocido'

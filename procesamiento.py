@@ -1,3 +1,4 @@
+import datetime
 import boto3
 import pandas as pd
 from io import StringIO
@@ -35,17 +36,29 @@ def procesar_acta(nombre_archivo_s3):
         df.to_csv(csv_buffer, index=False)
 
         # Cargar archivo procesado a S3
-        cargar_archivo_s3(csv_buffer.getvalue(), ruta_s3)
+        cargar_archivo_s3(csv_buffer.getvalue(), ruta_s3, semestre, facultad, programa)
 
         # Eliminar el archivo original después de la carga exitosa
         eliminar_archivo_s3(nombre_archivo_s3)
     else:
         print(f"Errores encontrados en el archivo {nombre_archivo_s3}, revisa el log de errores.")
 
-def cargar_archivo_s3(contenido_csv, ruta_s3):
+def cargar_archivo_s3(contenido_csv, ruta_s3, semestre, facultad, programa):
     try:
+        metadata = {
+            "sem": semestre,
+            "area": "academico",
+            "fac": facultad,
+            "prog": programa,
+            "tipo_doc": "notas",
+            "subarea": facultad,
+            "fecha_creacion": datetime.datetime.now().isoformat(),
+            "descripcion": f"notas de estudiantes del programa {programa} para el semestre {semestre}",
+            "confidencialidad": "restringido",
+            "tipo_archivo": "notas_estudiantes"
+        }
         # Subir el archivo CSV a S3 desde la memoria
-        s3.put_object(Body=contenido_csv, Bucket=bucket_name, Key=ruta_s3)
+        s3.put_object(Body=contenido_csv, Bucket=bucket_name, Key=ruta_s3, Metadata=metadata)
         print(f"Archivo cargado exitosamente a {ruta_s3}")
     except Exception as e:
         registrar_error(f"Error al cargar el archivo a {ruta_s3}: {e}")
