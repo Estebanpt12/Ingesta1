@@ -7,7 +7,7 @@ import docx
 
 # Configuración de logging para registrar errores
 s3 = boto3.client('s3')
-bucket_name = 'uq-datalake-test'
+bucket_name = 'uq-datalake'
 carpeta_base = 'archivos/'
 carpeta_destino = 'raw/'
 carpeta_extras = 'extras/'  # Carpeta para archivos que no se procesaron correctamente

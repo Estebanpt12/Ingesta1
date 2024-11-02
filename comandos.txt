@@ -1,3 +1,7 @@
 pip install --platform manylinux2014_x86_64 --target=python --implementation cp --python-version 3.12 --only-binary=:all: --upgrade -r requirements.txt
+pip install python-docx
+pip install PyPDF2
+
+
 https://docs.aws.amazon.com/lambda/latest/dg/packaging-layers.html
 https://www.youtube.com/watch?v=grRW1Z_C9vw
