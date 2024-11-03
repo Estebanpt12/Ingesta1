@@ -11,9 +11,10 @@ bucket_name = 'uq-datalake'
 carpeta_base = 'archivos/'
 carpeta_destino = 'raw/'
 carpeta_extras = 'extras/'  # Carpeta para archivos que no se procesaron correctamente
+temp_dir = "/tmp"  # Usar el directorio temporal de Lambda
 
 # Configuración del logger
-log_file_path = 'log_errores.txt'
+log_file_path = os.path.join(temp_dir, "log_errores.txt")
 logging.basicConfig(filename=log_file_path, level=logging.ERROR)
 
 # Campos requeridos en los archivos de investigación
@@ -31,11 +32,9 @@ def batch_ingest_investigations():
         # Obtener lista de archivos en la carpeta de origen
         response = s3.list_objects_v2(Bucket=bucket_name, Prefix=carpeta_base)
         files = [obj['Key'] for obj in response.get('Contents', []) if obj['Key'].endswith(('.pdf', '.docx'))]
-        
         # Variables de control para lotes
         current_batch = []
         current_size = 0
-        
         for file_key in files:
             file_size = get_file_size(file_key)
             # Validar archivo de actas de investigación antes de añadirlo al lote
@@ -44,23 +43,18 @@ def batch_ingest_investigations():
                 current_size += file_size
             else:
                 move_to_extras(file_key)  # Mover archivo no procesado a la carpeta /extras
-            
             # Cargar el lote si se cumple el tamaño o número de archivos
             if len(current_batch) >= 5 or current_size >= 100 * 1024 * 1024:
                 upload_batch(current_batch)
                 current_batch.clear()
                 current_size = 0
-        
         # Subir archivos restantes si los hay
         if current_batch:
             upload_batch(current_batch)
-        
         # Eliminar archivos originales
         delete_processed_files(files)
-
         # Subir el log de errores a S3
         upload_error_log_to_s3()
-            
     except Exception as e:
         logging.error(f"{datetime.now()} - Error en la ingesta por lotes de investigaciones: {e}")
         print("Ocurrió un error en la ingesta por lotes. Revisa el archivo log para más detalles.")
@@ -147,8 +141,8 @@ def validate_research_data(file_key):
     """Función para validar datos en archivos de actas de investigación (PDF o DOCX)"""
     try:
         # Descargar el archivo temporalmente
-        file_name = os.path.basename(file_key)
-        s3.download_file(bucket_name, file_key, file_name)
+        file_name = os.path.join(temp_dir, os.path.basename(file_key))
+        s3.download_file(bucket_name, file_key, file_name) 
 
         # Leer y validar el contenido del archivo
         if file_name.endswith('.pdf'):
